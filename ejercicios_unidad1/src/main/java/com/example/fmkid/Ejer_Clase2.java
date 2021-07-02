@@ -199,7 +199,7 @@ public class Ejer_Clase2 {
         System.out.print("Por favor ingrese la cantidad de números para sumar sus factoriales: ");
         int N = input.nextInt();
         input.close();
-        if (N < 1 || N > 26)
+        if (N < 1 || N > 20)
             System.out.print("El número ingresado no es válido");
         else {
             long suma = 0, factorial = 1;
