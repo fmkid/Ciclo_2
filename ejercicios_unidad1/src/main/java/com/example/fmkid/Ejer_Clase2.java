@@ -2,7 +2,7 @@ package com.example.fmkid;
 import java.util.Scanner;
 
 public class Ejer_Clase2 {
-    public static void main(String[] parametro1){
+    public static void main(String[] args){
         ej_08();
     }
 
