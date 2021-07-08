@@ -1,4 +1,5 @@
-package com.example.fmkid;
+package com.example.fmkid.Classes;
+
 public class Empresa{
     //Atributo
     private String nombre = "N.N Ltda.";

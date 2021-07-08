@@ -1,6 +1,7 @@
 package com.example.fmkid;
+import com.example.fmkid.Classes.*;
 
-public class Principal {
+public class App {
     public static void main(String[] args) {
         final String linea = "---------------------------------------------------------------------";
         //Creación de objeto tipo Empresa

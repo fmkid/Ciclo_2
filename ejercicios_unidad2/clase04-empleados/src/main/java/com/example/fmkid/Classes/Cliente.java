@@ -1,4 +1,5 @@
-package com.example.fmkid;
+package com.example.fmkid.Classes;
+
 public class Cliente extends Persona{
     //Atributo
     private String telefono = "000 000 00 00";
@@ -6,9 +7,12 @@ public class Cliente extends Persona{
     //Constructores
     public Cliente(){
         //Constructor por defecto
+        Persona.cuentaPersona++;
+        this.setId(Persona.cuentaPersona);
     }
 
     public Cliente(String nombre, Integer edad, String telefono) {
+        this();
         this.setNombre(nombre);
         this.setEdad(edad);
         this.setTelefono(telefono);
@@ -27,7 +31,7 @@ public class Cliente extends Persona{
     //Método heredado de la clase abstracta Persona
     @Override
     public void mostrar(){
-        System.out.println("El número telefónico del cliente " + this.getNombre()  + " (" + this.getEdad() +
-        " años)" + " es: " + this.getTelefono());
+        System.out.println("El número telefónico del cliente " + this.getNombre()  + " (ID: " + this.getId() + " - Edad: " +
+            this.getEdad() + " años)" + " es: " + this.getTelefono());
     }
 }
