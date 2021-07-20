@@ -3,10 +3,10 @@ package com.example.fmkid;
 public class Nota {
     // Atributos
 
-    private int notaEscala100;
     private int idNota;
+    private int notaEscala100;
     private double notaEscala5;
-    private String notaCuantitativa;
+    private String notaCualitativa;
     //private static final int CANT_DECIMALES = 2;
 
     // Constructores
@@ -15,17 +15,18 @@ public class Nota {
         this.idNota = idNota;
         this.notaEscala100 = (int) notaEscala100;
         this.notaEscala5 = redondearNota(notaEscala100 / 20, 2);
-        this.notaCuantitativa = cuantificarNota(this.notaEscala5);
+        this.notaCualitativa = cualificarNota(this.notaEscala5);
     }
 
     // Métodos
 
-    public void imprimirNota() {
-        System.out.println();
-        System.out.println("** Nota #" + this.idNota + " **");
-        System.out.println("Nota en escala de 0 a 100: " + this.notaEscala100);
-        System.out.println("Nota en escala de 0.0 a 5.0: " + this.notaEscala5);
-        System.out.println("Nota en escala cuantitativa: " + this.notaCuantitativa);
+    public void imprimirNota(String tipoNota) {
+        if (this.idNota > Materia.ID_DEFAULT) {
+            System.out.println("\n** Nota #" + this.idNota + " **");
+        }
+        System.out.println(tipoNota + " (en escala de 0 a 100): " + this.notaEscala100);
+        System.out.println(tipoNota + " (en escala de 0.0 a 5.0): " + this.notaEscala5);
+        System.out.println(tipoNota + " (en escala cualitativa): " + this.notaCualitativa);
     }
 
     public static double redondearNota(double nota, int decimales) {
@@ -33,7 +34,7 @@ public class Nota {
         return Math.round(nota * potencia) / potencia;
     }
 
-    private static String cuantificarNota(double notaEscala5) {
+    private static String cualificarNota(double notaEscala5) {
         if (notaEscala5 < 2.95)
             return "INSUFICIENTE";
         else if (notaEscala5 < 3.55)
@@ -56,8 +57,8 @@ public class Nota {
         return notaEscala5;
     }
 
-    public String getNotaCuantitativa() {
-        return notaCuantitativa;
+    public String getNotaCualitativa() {
+        return notaCualitativa;
     }
 
     public int getIdNota() {

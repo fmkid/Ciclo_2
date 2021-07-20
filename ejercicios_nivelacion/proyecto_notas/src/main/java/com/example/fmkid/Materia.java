@@ -12,7 +12,7 @@ public class Materia {
     private Nota notaPromedio;
     private ArrayList<Nota> listaNotas;
     private static final int NOTAS_A_CONSIDERAR = 3;
-    private static final int ID_DEFAULT = -1;
+    public static final int ID_DEFAULT = -1;
 
     // Constructores
 
@@ -29,7 +29,7 @@ public class Materia {
         Nota notaNueva = new Nota(this.cantidadNotas + 1, (double) notaEscala100);
         this.listaNotas.add(notaNueva);
         this.cantidadNotas = listaNotas.size();
-        if ((notaEscala100 < this.peorNota.getNotaEscala100()) || (this.peorNota.getIdNota() == -1))
+        if ((notaEscala100 < this.peorNota.getNotaEscala100()) || (this.peorNota.getIdNota() == ID_DEFAULT))
             this.peorNota = notaNueva;
     }
 
@@ -52,7 +52,7 @@ public class Materia {
     }
 
     private String evaluarAprobacion() {
-        if (this.notaPromedio.getNotaCuantitativa() == "INSUFICIENTE")
+        if (this.notaPromedio.getNotaCualitativa() == "INSUFICIENTE")
             return "REPROBADO";
         else
             return "APROBADO";
@@ -60,21 +60,22 @@ public class Materia {
 
     public void imprimirMateria() {
         String concepto = this.nombreMateria + " [" + this.idMateria + "]";
+        int notasParaPromedio = this.cantidadNotas;
 
         System.out.println("\n==== Notas registradas para la asignatura " + concepto + " ====");
 
         if (this.cantidadNotas != 0) {
             for (Nota nota : this.listaNotas) {
-                nota.imprimirNota();
-                if ((nota.getIdNota() == this.peorNota.getIdNota()) && (this.cantidadNotas > NOTAS_A_CONSIDERAR))
+                nota.imprimirNota("Nota");
+                if ((nota.getIdNota() == this.peorNota.getIdNota()) && (this.cantidadNotas > NOTAS_A_CONSIDERAR)) {
                     System.out.println("(Esta es la peor nota registrada - No se tendrá en cuenta para el promedio)");
+                    notasParaPromedio--;
+                }
             }
             this.calcularPromedioAjustado();
-            System.out.println("\nCantidad total de notas registradas: " + this.cantidadNotas);
-            System.out.println("Promedio ajustado (en escala de 0 a 100): " + this.notaPromedio.getNotaEscala100());
-            System.out.println("Promedio ajustado (en escala de 0.0 a 5.0): " + this.notaPromedio.getNotaEscala5());
-            System.out
-                    .println("Promedio ajustado (en escala cuantitativa): " + this.notaPromedio.getNotaCuantitativa());
+            System.out.println("\n>> Total de notas registradas: " + this.cantidadNotas);
+            System.out.println(">> Notas tenidas en cuenta para calcular promedio: " + notasParaPromedio);
+            this.notaPromedio.imprimirNota(">> Promedio");
             System.out.println("\n=== Ha " + this.evaluarAprobacion() + " la asignatura " + concepto + " ===");
         } else
             System.out.println("\n** En este momento no hay notas registradas ***");
