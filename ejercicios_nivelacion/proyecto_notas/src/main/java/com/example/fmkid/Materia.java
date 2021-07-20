@@ -3,89 +3,81 @@ package com.example.fmkid;
 import java.util.ArrayList;
 
 public class Materia {
-    //Atributos
+    // Atributos
 
     private int cantidadNotas;
-    private int promedio100;
-    private int peorNota100;
-    private double promedio5;
     private String nombreMateria;
     private String idMateria;
-    private ArrayList<Nota> listaNotas = new ArrayList<>();
+    private Nota peorNota;
+    private Nota notaPromedio;
+    private ArrayList<Nota> listaNotas;
+    private static final int NOTAS_A_CONSIDERAR = 3;
+    private static final int ID_DEFAULT = -1;
 
-    //Constructores
+    // Constructores
 
     public Materia(String nombreMateria, String idMateria) {
-        this.nombreMateria = nombreMateria;
-        this.idMateria = idMateria;
-        this.peorNota100 = 100;
+        this.peorNota = new Nota(ID_DEFAULT, 100);
+        this.listaNotas = new ArrayList<>();
+        this.nombreMateria = nombreMateria.toUpperCase();
+        this.idMateria = idMateria.toUpperCase();
     }
 
-    //Métodos
-    
+    // Métodos
+
+    public void setNota(int notaEscala100) {
+        Nota notaNueva = new Nota(this.cantidadNotas + 1, (double) notaEscala100);
+        this.listaNotas.add(notaNueva);
+        this.cantidadNotas = listaNotas.size();
+        if ((notaEscala100 < this.peorNota.getNotaEscala100()) || (this.peorNota.getIdNota() == -1))
+            this.peorNota = notaNueva;
+    }
+
     private void calcularPromedioAjustado() {
-        if (this.cantidadNotas > 1) {
-            int sumatoria100 = 0;
-            double sumatoria5 = 0;
-            int n = this.cantidadNotas - 1;
-            for (Nota nota : this.listaNotas) {
-                sumatoria100 += nota.getNotaEscala100();
-                sumatoria5 += nota.getNotaEscala5();
-            }
-            this.promedio100 = (sumatoria100 - this.peorNota100) / n;
-            this.promedio5 = Nota.redondearNota((sumatoria5 - Nota.convertirDe100a5(this.peorNota100)) / n, 2);
-        } else {
-            this.promedio100 = this.listaNotas.get(0).getNotaEscala100();
-            this.promedio5 = this.listaNotas.get(0).getNotaEscala5();
+        int sumatoria = 0;
+        int peorNota = 0;
+        double promedio;
+        double notas = (double) this.cantidadNotas;
+
+        for (Nota nota : this.listaNotas)
+            sumatoria += nota.getNotaEscala100();
+
+        if (this.cantidadNotas > NOTAS_A_CONSIDERAR) {
+            peorNota = this.peorNota.getNotaEscala100();
+            notas--;
         }
+
+        promedio = (sumatoria - peorNota) / notas;
+        notaPromedio = new Nota(ID_DEFAULT, promedio);
+    }
+
+    private String evaluarAprobacion() {
+        if (this.notaPromedio.getNotaCuantitativa() == "INSUFICIENTE")
+            return "REPROBADO";
+        else
+            return "APROBADO";
     }
 
     public void imprimirMateria() {
-        System.out.println("\n==== Notas registradas para " + this.nombreMateria.toUpperCase() + 
-                           " [" + this.idMateria.toUpperCase() + "] ====");
+        String concepto = this.nombreMateria + " [" + this.idMateria + "]";
+
+        System.out.println("\n==== Notas registradas para la asignatura " + concepto + " ====");
+
         if (this.cantidadNotas != 0) {
             for (Nota nota : this.listaNotas) {
                 nota.imprimirNota();
-                if (nota.getNotaEscala100() == this.peorNota100)
-                    System.out.println("<- Esta es la peor nota registrada -> ");
+                if ((nota.getIdNota() == this.peorNota.getIdNota()) && (this.cantidadNotas > NOTAS_A_CONSIDERAR))
+                    System.out.println("(Esta es la peor nota registrada - No se tendrá en cuenta para el promedio)");
             }
             this.calcularPromedioAjustado();
             System.out.println("\nCantidad total de notas registradas: " + this.cantidadNotas);
-            System.out.println("Promedio ajustado (en escala de 100): " + this.promedio100);
-            System.out.println("Promedio ajustado (en escala de 5.0): " + this.promedio5);
-        } else 
+            System.out.println("Promedio ajustado (en escala de 0 a 100): " + this.notaPromedio.getNotaEscala100());
+            System.out.println("Promedio ajustado (en escala de 0.0 a 5.0): " + this.notaPromedio.getNotaEscala5());
+            System.out
+                    .println("Promedio ajustado (en escala cuantitativa): " + this.notaPromedio.getNotaCuantitativa());
+            System.out.println("\n=== Ha " + this.evaluarAprobacion() + " la asignatura " + concepto + " ===");
+        } else
             System.out.println("\n** En este momento no hay notas registradas ***");
         System.out.println();
-    }
-
-    //Getters
-
-    public int getCantidadNotas() {
-        return cantidadNotas;
-    }
-
-    public String getIdMateria() {
-        return idMateria;
-    }
-
-    public String getNombreMateria() {
-        return nombreMateria;
-    }
-
-    //Setters
-
-    public void setIdMateria(String idMateria) {
-        this.idMateria = idMateria;
-    }
-
-    public void setNombreMateria(String nombreMateria) {
-        this.nombreMateria = nombreMateria;
-    }
-
-    public void setNota(int notaEscala100) {
-        this.listaNotas.add(new Nota(this.cantidadNotas + 1, notaEscala100));
-        this.cantidadNotas = listaNotas.size();
-        if (notaEscala100 < this.peorNota100)
-            this.peorNota100 = notaEscala100;
     }
 }
