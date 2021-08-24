@@ -15,12 +15,13 @@ import java.sql.SQLException;
     EN DONDE SE ALMACENAN LOS DATOS DE LAS DISTINTAS CONSULTAS */
 
 public class Controlador {
-    public static final String consulta1 = "SELECT Nombre, Salario FROM Lider WHERE Ciudad_Residencia = 'Bogota'";
 
-    public static final String consulta2 = "SELECT Nombre , Salario, (Salario * 0.16) AS isr, "
+    private static final String CONSULTA_1 = "SELECT Nombre, Salario FROM Lider WHERE Ciudad_Residencia = 'Bogota'";
+
+    private static final String CONSULTA_2 = "SELECT Nombre , Salario, (Salario * 0.16) AS isr, "
             + "(Primer_Apellido || ' ' || Segundo_Apellido) AS ape FROM Lider WHERE Salario > 10000";
 
-    public static final String consulta3 = "SELECT Constructora, Numero_Banos, Nombre "
+    private static final String CONSULTA_3 = "SELECT Constructora, Numero_Banos, Nombre "
             + "FROM Proyecto p JOIN Lider l ON p.ID_Lider = l.ID_Lider WHERE p.ID_Proyecto BETWEEN 5 AND 17";
 
     private ConsultaDAO listaConsulta;
@@ -32,11 +33,11 @@ public class Controlador {
     public ArrayList<ConsultaVO> realizarConsulta(int idConsulta) throws SQLException {
         switch (idConsulta) {
             case 1:
-                return listaConsulta.getQuery(1, consulta1);
+                return listaConsulta.getQuery(1, CONSULTA_1);
             case 2:
-                return listaConsulta.getQuery(2, consulta2);
+                return listaConsulta.getQuery(2, CONSULTA_2);
             case 3:
-                return listaConsulta.getQuery(3, consulta3);
+                return listaConsulta.getQuery(3, CONSULTA_3);
             default:
                 throw new SQLException();
         }
